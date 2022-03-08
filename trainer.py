@@ -67,8 +67,10 @@ class Trainer():
 
     def add_winner(self, winner: str):
         for snake_name in self.round_winners:
-            self.round_winners[snake_name].append(1 if snake_name == winner else 0)
-            self.live_stats[snake_name].append(1 if snake_name == winner else 0)
+            self.round_winners[snake_name].append(
+                1 if snake_name == winner else 0)
+            self.live_stats[snake_name].append(
+                1 if snake_name == winner else 0)
 
     def increment_survival(self, snake_name: str):
         self.survival[snake_name][-1] += 1
@@ -83,15 +85,16 @@ class Trainer():
         params = ["./battlesnake.exe", "play", "-W", "11", "-H", "11"]
 
         for snake_name in self.agents:
-            params = [*params, *["--name", snake_name, "--url", "http://localhost:8000"]]
+            params = [*params, *["--name", snake_name,
+                                 "--url", "http://localhost:8000"]]
 
         subprocess.run(params, capture_output=True)
-    
+
     def print_stats(self):
         print(f"Last 100:")
         for snake_name in self.live_stats:
             print(f"{snake_name}: {sum(self.live_stats[snake_name])}")
-    
+
     def save_history(self, history_type: str, source_dict: Dict[str, List[int]]):
         for snake_name in source_dict:
             existing = []
@@ -103,10 +106,12 @@ class Trainer():
             if not existing:
                 existing = []
 
-            combined = [*existing, *source_dict[snake_name]] # Save only the data generated since the last save
+            # Save only the data generated since the last save
+            combined = [*existing, *source_dict[snake_name]]
             with open(f"./models/{snake_name}-{history_type}.json", 'w') as f:
                 json.dump(combined, f)
-            source_dict[snake_name].clear() # Purge the history, but keep 100 to have live stats
+            # Purge the history, but keep 100 to have live stats
+            source_dict[snake_name].clear()
 
     def train(self):
         for round in range(1, ROUNDS + 1):
@@ -114,7 +119,8 @@ class Trainer():
             print(f"ROUND: {round}/{ROUNDS}")
             self.print_stats()
             self.run_battlesnake()
-            print(f"Game lasted {self.round_history[list(self.agents.keys())[0]][-1].state.turn} rounds")
+            print(
+                f"Game lasted {self.round_history[list(self.agents.keys())[0]][-1].state.turn} rounds")
             if round % FIT_EVERY == 0:
                 print(f"\nFitting models...")
 
@@ -129,7 +135,8 @@ class Trainer():
                     agent.fit_model()
 
                 if round % COPY_WEIGHT_EVERY == 0:
-                    agent.target_network.set_weights(agent.value_network.weights)
+                    agent.target_network.set_weights(
+                        agent.value_network.weights)
 
                 if round % SAVE_MODEL_EVERY == 0:
                     agent.value_network.save(f'models/{snake_name}.model')
@@ -137,6 +144,6 @@ class Trainer():
                     self.save_history("surival-history", self.survival)
 
                 agent.decay_epsilon()
-    
+
     def select_greedy_option(self, snake_name: str, state: TurnRequest):
         return self.agents[snake_name].select_greedy_option(state)
