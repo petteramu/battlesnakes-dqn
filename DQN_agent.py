@@ -4,9 +4,9 @@ from random import random, randrange, sample
 from typing import Deque, List
 import numpy as np
 from keras import Sequential
-from battlesnake_types import TurnRequest
 from data_transformation import DataTransformer
 from rewarders import Rewarder
+from simulator.board import TurnOutput
 from training_types import RoundHistoryElement
 
 EPSILON_DECAY = 0.9975
@@ -21,8 +21,10 @@ class DQN_agent():
     data_transformer: DataTransformer
     value_network: Sequential
     target_network: Sequential
+    name: str
 
-    def __init__(self, value_network: Sequential, target_network: Sequential, data_transformer: DataTransformer, rewarder: Rewarder, epsilon_start: int):
+    def __init__(self, name: str, value_network: Sequential, target_network: Sequential, data_transformer: DataTransformer, rewarder: Rewarder, epsilon_start: int):
+        self.name = name
         self.value_network = value_network
         self.target_network = target_network
         self.data_transformer = data_transformer
@@ -33,7 +35,7 @@ class DQN_agent():
     def decay_epsilon(self):
         self.epsilon = max(self.epsilon * EPSILON_DECAY, MIN_EPSILON)
 
-    def transform_bs_state_to_input_space(self, state: TurnRequest):
+    def transform_bs_state_to_input_space(self, state: TurnOutput):
         input_space = np.array(self.data_transformer.state_to_input_space(state.board, state.you))
         return input_space
     
@@ -44,19 +46,18 @@ class DQN_agent():
     def compute_q_value(self, reward: float, max_future_q: float):
         return reward + DISCOUNT * max_future_q
     
-    def predict_qs(self, state):
-        return self.target_network.predict(np.array([state]))
+    def predict_qs(self, input_space):
+        input_space = np.reshape(input_space, (-1, 11, 11, 3))
+        return self.target_network.predict(input_space)
     
-    def select_greedy_option(self, state):
+    def select_greedy_option(self, state: TurnOutput):
         if random() < self.epsilon:
             return randrange(0, 4, step=1)
         
         input_space = self.transform_bs_state_to_input_space(state)
-        return np.argmax(self.predict_qs(input_space))
-    
-    def is_terminal_state(self, state: TurnRequest):
-        if not state.board.snakes:
-            return True
+        predicted_qs = self.predict_qs(input_space)
+        selected = np.argmax(predicted_qs)
+        return selected
         
     def fit_model(self):
         inputs = list()
@@ -67,8 +68,12 @@ class DQN_agent():
 
         selected_memory = self.select_from_replay_memory()
 
-        for memory in selected_memory:
+        from_states = np.array([memory[0] for memory in selected_memory])
+        predicted_from_states_q_values = self.predict_qs(from_states)
+
+        for memory_index, memory in enumerate(selected_memory):
             reward = memory[2]
+
             if memory[4]: # The resulting state is a terminal state, there is no next state to predict q's from
                 target_value = reward
             else:
@@ -76,12 +81,14 @@ class DQN_agent():
                 future_q_value = self.compute_q_value(reward, predicted_future_q)
                 target_value = future_q_value[memory[1]]
 
-            labels.append(target_value)
+            predicted_from_states_q_values[memory_index][memory[1]] = target_value
+
+            labels.append(predicted_from_states_q_values)
             inputs.append(memory[0])
 
-        inputs = np.array(inputs)
+        inputs = np.asarray(inputs)
         labels = np.asarray(labels)
-        self.value_network.fit(inputs, labels, shuffle=False, batch_size=REPLAY_MEMORY_BATCH, verbose=0)
+        self.value_network.fit(x=inputs, y=labels, shuffle=False, batch_size=REPLAY_MEMORY_BATCH, verbose=0)
     
     def add_history(self, round_history: List[RoundHistoryElement]):
         for turn, snake_step in enumerate(round_history):

@@ -1,4 +1,5 @@
 from battlesnake_types import Battlesnake, Board
+from simulator.board import BoardOutput, SnakeOutput
 
 def flatten(t):
     return [item for sublist in t for item in sublist]
@@ -8,7 +9,7 @@ class DataTransformer():
     # [0, 1] for height, width, where 0 is open, 1 is another snake (or obstacle)
     # [0, 1] for height, width, where 0 is no food, or health / 100 if there is food there
     # [0, 1] for height, width, where 0 is open, 1 is self
-    def state_to_input_space(self, board: Board, self_snake: Battlesnake):
+    def state_to_input_space(self, board: BoardOutput, self_snake: SnakeOutput):
         input_space = []
         for width in range(0, board.width):
             # [self, other snakes, food]

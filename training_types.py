@@ -3,11 +3,11 @@ from battlesnake_types import TurnRequest
 class RoundHistoryElement():
     move: int
     state: TurnRequest
-    score: int
     terminal: bool
+    elimination_reason: str
 
-    def __init__(self, move: int, state: dict, score: int, terminal: bool = False):
+    def __init__(self, move: int, state: dict, terminal: bool = False, elimination_reason: str = None):
         self.move = move
         self.state = state
-        self.score = score
         self.terminal = terminal
+        self.elimination_reason = elimination_reason
