@@ -17,14 +17,19 @@ Windows:
 Mac:
 
 > source ./venv/bin/activate
->
+
+Then install dependencies:
 > pip install tensorflow keras numpy fastapi pandas matplotlib uvicorn
 
-Almost everything is installed now, the only thing missing is the actual battlesnakes game, which you can get from [https://github.com/BattlesnakeOfficial/rules/releases]
-Place the battlesnakes.exe file in the root folder of battlesnakes-dqn
 
 **To start training**
 
-> uvicorn server:app
+> py run.py
+
+You might want to alter the run.py script to set the amount of rounds to train for now. Also, to create new models for training instead of using the ones check in to the repo, set new_models=True
+
+Or, alternatively, run it from the history notebook.
+
+To see stats, see the history notebook
 
 Then make a GET request to localhost:8000/train

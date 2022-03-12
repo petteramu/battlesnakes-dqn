@@ -1,7 +1,4 @@
 from trainer import Trainer
 
-# t = Trainer()
-# t.train(500)
-
-from tensorflow.python.client import device_lib 
-print(device_lib.list_local_devices())
+t = Trainer(new_models=False)
+t.train(rounds=200)

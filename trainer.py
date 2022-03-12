@@ -14,7 +14,6 @@ from rewarders import OnlyWinsRewarder, RewardWinsPunishLossRewarder, SurvivalRe
 from simulator.play import Game
 from simulator.snake import Snake
 from training_types import RoundHistoryElement
-from IPython.display import clear_output
 
 ROUNDS = 200
 
@@ -29,30 +28,32 @@ class Trainer():
     agents: Dict[str, DQN_agent]
     logger: Logger
 
-    def __init__(self):
+    def __init__(self, new_models=False):
         self.logger = Logger()
         data_transformer = DataTransformer()
-        winner_value_model = load_model(f"./models/winner.model")
-        winner_epsilon = 0.01
-        winner_target_model = load_model(f"./models/winner.model")
-        survivor_value_model = load_model(f"./models/survivor.model")
-        survivor_epsilon = 0.01
-        survivor_target_model = load_model(f"./models/survivor.model")
-        mk2_punisher_value_model = load_model(f"./models/mk2_punisher.model")
-        mk2_punisher_epsilon = 0.01
-        mk2_punisher_target_model = load_model(f"./models/mk2_punisher.model")
-        mk2_winner_value_model = load_model(f"./models/mk2_winner.model")
-        mk2_winner_epsilon = 0.01
-        mk2_winner_target_model = load_model(f"./models/mk2_winner.model")
+        if new_models:
+            (winner_value_model, winner_target_model) = create_models()
+            winner_epsilon = 1
+            (survivor_value_model, survivor_target_model) = create_models()
+            survivor_epsilon = 1
+            (mk2_punisher_value_model, mk2_punisher_target_model) = create_mk2_models()
+            mk2_punisher_epsilon = 1
+            (mk2_winner_value_model, mk2_winner_target_model) = create_mk2_models()
+            mk2_winner_epsilon = 1
+        else:
+            winner_value_model = load_model(f"./models/winner.model")
+            winner_epsilon = 0.01
+            winner_target_model = load_model(f"./models/winner.model")
+            survivor_value_model = load_model(f"./models/survivor.model")
+            survivor_epsilon = 0.01
+            survivor_target_model = load_model(f"./models/survivor.model")
+            mk2_punisher_value_model = load_model(f"./models/mk2_punisher.model")
+            mk2_punisher_epsilon = 0.01
+            mk2_punisher_target_model = load_model(f"./models/mk2_punisher.model")
+            mk2_winner_value_model = load_model(f"./models/mk2_winner.model")
+            mk2_winner_epsilon = 0.01
+            mk2_winner_target_model = load_model(f"./models/mk2_winner.model")
 
-        # (winner_value_model, winner_target_model) = create_models()
-        # winner_epsilon = 1
-        # (survivor_value_model, survivor_target_model) = create_models()
-        # survivor_epsilon = 1
-        # (mk2_punisher_value_model, mk2_punisher_target_model) = create_mk2_models()
-        # mk2_punisher_epsilon = 1
-        # (mk2_winner_value_model, mk2_winner_target_model) = create_mk2_models()
-        # mk2_winner_epsilon = 1
         self.agents = {
             "winner": DQN_agent("winner", winner_value_model, winner_target_model, data_transformer, OnlyWinsRewarder(), winner_epsilon),
             "survivor": DQN_agent("survivor", survivor_value_model, survivor_target_model, data_transformer, SurvivalRewarder(), survivor_epsilon),
@@ -100,22 +101,6 @@ class Trainer():
         for agent_name in self.agents:
             self.logger.dump(agent_name)
 
-            # existing = []
-            # try:
-            #     with open(f"./models/{snake_name}-{history_type}.json", 'r') as f:
-            #         existing = json.load(f)
-            # except:
-            #     pass
-            # if not existing:
-            #     existing = []
-
-            # # Save only the data generated since the last save
-            # combined = [*existing, *source_dict[snake_name]]
-            # with open(f"./models/{snake_name}-{history_type}.json", 'w') as f:
-            #     json.dump(combined, f)
-            # # Purge the history, but keep 100 to have live stats
-            # source_dict[snake_name].clear()
-
     def train(self, rounds: int = ROUNDS):
         """ This is the actual training logic. The training will go for x amount of rounds, where each round will run a battlesnake game.
             The snakes moves are then passed to the dqn agents which will keep them in the replay memory, which again will be sampled every round
@@ -123,7 +108,6 @@ class Trainer():
         """
         for round in range(1, rounds + 1):
             system("cls")
-            clear_output(wait=True) # Clears the output in a jupyter notebook
             print(f"ROUND: {round}/{rounds}")
             self.print_stats()
             histories = self.run_battlesnake()
@@ -151,7 +135,7 @@ class Trainer():
                         agent.value_network.weights)
 
                 if save_model:
-                    agent.value_network.save(f'models/{snake_name}.model')
+                    agent.value_network.save(f'models/{snake_name}.h5', save_format="h5")
                 
                 if save_logs:
                     self.save_history()
