@@ -46,3 +46,26 @@ def create_mk2_models():
     target_model = create_model_mk2()
     target_model.set_weights(value_model.weights)
     return (value_model, target_model)
+
+def create_bordered_model():
+    model = Sequential(layers=[
+        Conv2D(filters=8, kernel_size=(3,3), activation="relu", input_shape=(13, 13, 3)),
+        Conv2D(filters=16, kernel_size=(3,3), activation="relu"),
+        Conv2D(filters=32, kernel_size=(3,3), activation="relu"),
+        Flatten(),
+        Dropout(0.5),
+        Dense(32, activation="relu"),
+        Dense(32, activation="relu"),
+        Dense(4)
+    ], name="Battlesnake_trainer_bordered")
+
+    model.compile(optimizer=Adam(learning_rate=0.0005), loss="mse")
+    model.build()
+    model.summary()
+    return model
+
+def create_bordered_models():
+    value_model = create_bordered_model()
+    target_model = create_bordered_model()
+    target_model.set_weights(value_model.weights)
+    return (value_model, target_model)

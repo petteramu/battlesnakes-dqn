@@ -6,10 +6,10 @@ from os import system
 from typing import Deque, Dict, List
 from DQN_agent import DQN_agent
 from battlesnake_types import TurnRequest
-from data_transformation import DataTransformer
+from data_transformation import BorderedDataTransformer, DataTransformer
 from dqn_move_policy import DQNMovePolicy
 from logger import Logger
-from model import create_mk2_models, create_models
+from model import create_bordered_models, create_mk2_models, create_models
 from rewarders import OnlyWinsRewarder, RewardWinsPunishLossRewarder, SurvivalRewarder
 from simulator.play import Game
 from simulator.snake import Snake
@@ -31,34 +31,34 @@ class Trainer():
     def __init__(self, new_models=False):
         self.logger = Logger()
         data_transformer = DataTransformer()
+        bordered_data_transformer = BorderedDataTransformer()
         if new_models:
-            (winner_value_model, winner_target_model) = create_models()
-            winner_epsilon = 1
+            epsilon = 1
+            # (winner_value_model, winner_target_model) = create_models()
             (survivor_value_model, survivor_target_model) = create_models()
-            survivor_epsilon = 1
             (mk2_punisher_value_model, mk2_punisher_target_model) = create_mk2_models()
-            mk2_punisher_epsilon = 1
             (mk2_winner_value_model, mk2_winner_target_model) = create_mk2_models()
-            mk2_winner_epsilon = 1
+            (bordered_value_model, bordered_target_model) = create_bordered_models()
         else:
-            winner_value_model = load_model(f"./models/winner.h5")
-            winner_epsilon = 0.01
-            winner_target_model = load_model(f"./models/winner.h5")
+            epsilon = 0.01
+            # winner_value_model = load_model(f"./models/winner.h5")
+            # winner_epsilon = 0.01
+            # winner_target_model = load_model(f"./models/winner.h5")
             survivor_value_model = load_model(f"./models/survivor.h5")
-            survivor_epsilon = 0.01
             survivor_target_model = load_model(f"./models/survivor.h5")
             mk2_punisher_value_model = load_model(f"./models/mk2_punisher.h5")
-            mk2_punisher_epsilon = 0.01
             mk2_punisher_target_model = load_model(f"./models/mk2_punisher.h5")
             mk2_winner_value_model = load_model(f"./models/mk2_winner.h5")
-            mk2_winner_epsilon = 0.01
             mk2_winner_target_model = load_model(f"./models/mk2_winner.h5")
+            bordered_value_model = load_model(f"./models/bordered.h5")
+            bordered_target_model = load_model(f"./models/bordered.h5")
 
         self.agents = {
-            "winner": DQN_agent("winner", winner_value_model, winner_target_model, data_transformer, OnlyWinsRewarder(), winner_epsilon),
-            "survivor": DQN_agent("survivor", survivor_value_model, survivor_target_model, data_transformer, SurvivalRewarder(), survivor_epsilon),
-            "mk2_punisher": DQN_agent("mk2_punisher", mk2_punisher_value_model, mk2_punisher_target_model, data_transformer, RewardWinsPunishLossRewarder(), mk2_punisher_epsilon),
-            "mk2_winner": DQN_agent("mk2_winner", mk2_winner_value_model, mk2_winner_target_model, data_transformer, OnlyWinsRewarder(), mk2_winner_epsilon)
+            # "winner": DQN_agent("winner", winner_value_model, winner_target_model, data_transformer, OnlyWinsRewarder(), winner_epsilon),
+            "bordered": DQN_agent("bordered", bordered_value_model, bordered_target_model, bordered_data_transformer, OnlyWinsRewarder(), epsilon),
+            "survivor": DQN_agent("survivor", survivor_value_model, survivor_target_model, data_transformer, SurvivalRewarder(), epsilon),
+            "mk2_punisher": DQN_agent("mk2_punisher", mk2_punisher_value_model, mk2_punisher_target_model, data_transformer, RewardWinsPunishLossRewarder(), epsilon),
+            "mk2_winner": DQN_agent("mk2_winner", mk2_winner_value_model, mk2_winner_target_model, data_transformer, OnlyWinsRewarder(), epsilon)
         }
         self.live_stats = dict()
         for agent in self.agents:
