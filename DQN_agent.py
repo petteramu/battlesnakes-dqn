@@ -47,7 +47,7 @@ class DQN_agent():
         return reward + DISCOUNT * max_future_q
     
     def predict_qs(self, input_space):
-        input_space = np.reshape(input_space, (-1, 11, 11, 3))
+        input_space = np.reshape(input_space, (-1,) + self.data_transformer.input_shape)
         return self.target_network.predict(input_space)
     
     def select_greedy_option(self, state: TurnOutput):

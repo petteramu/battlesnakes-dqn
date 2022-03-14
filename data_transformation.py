@@ -5,6 +5,7 @@ def flatten(t):
     return [item for sublist in t for item in sublist]
 
 class DataTransformer():
+    input_shape = (11, 11, 3)
     # input space =
     # [0, 1] for height, width, where 0 is open, 1 is another snake (or obstacle)
     # [0, 1] for height, width, where 0 is no food, or health / 100 if there is food there
