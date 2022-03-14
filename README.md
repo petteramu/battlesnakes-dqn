@@ -26,7 +26,7 @@ Then install dependencies:
 
 > py run.py
 
-You might want to alter the run.py script to set the amount of rounds to train for now. Also, to create new models for training instead of using the ones check in to the repo, set new_models=True
+You might want to alter the run.py script to set the amount of rounds to train over. Also, to create new models for training instead of using the ones checked in to the repo, set new_models=True
 
 Or, alternatively, run it from the history notebook.
 
