@@ -32,4 +32,6 @@ Or, alternatively, run it from the history notebook.
 
 To see stats, see the history notebook
 
-Then make a GET request to localhost:8000/train
+**Note that there have been some issues with loading models with differing python versions. It worked a bit better with .h5 models. The current models were creating with python 3.8.6**
+
+Also note that there is some code from earlier when a http api was used to communicate with a different battlesnakes simulator
