@@ -41,18 +41,18 @@ class Trainer():
             (mk2_winner_value_model, mk2_winner_target_model) = create_mk2_models()
             mk2_winner_epsilon = 1
         else:
-            winner_value_model = load_model(f"./models/winner.model")
+            winner_value_model = load_model(f"./models/winner.h5")
             winner_epsilon = 0.01
-            winner_target_model = load_model(f"./models/winner.model")
-            survivor_value_model = load_model(f"./models/survivor.model")
+            winner_target_model = load_model(f"./models/winner.h5")
+            survivor_value_model = load_model(f"./models/survivor.h5")
             survivor_epsilon = 0.01
-            survivor_target_model = load_model(f"./models/survivor.model")
-            mk2_punisher_value_model = load_model(f"./models/mk2_punisher.model")
+            survivor_target_model = load_model(f"./models/survivor.h5")
+            mk2_punisher_value_model = load_model(f"./models/mk2_punisher.h5")
             mk2_punisher_epsilon = 0.01
-            mk2_punisher_target_model = load_model(f"./models/mk2_punisher.model")
-            mk2_winner_value_model = load_model(f"./models/mk2_winner.model")
+            mk2_punisher_target_model = load_model(f"./models/mk2_punisher.h5")
+            mk2_winner_value_model = load_model(f"./models/mk2_winner.h5")
             mk2_winner_epsilon = 0.01
-            mk2_winner_target_model = load_model(f"./models/mk2_winner.model")
+            mk2_winner_target_model = load_model(f"./models/mk2_winner.h5")
 
         self.agents = {
             "winner": DQN_agent("winner", winner_value_model, winner_target_model, data_transformer, OnlyWinsRewarder(), winner_epsilon),
