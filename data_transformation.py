@@ -47,16 +47,16 @@ class BorderedDataTransformer(DataTransformer):
 
         # Heads are represented with 5, bodies with 1
         for body_part in self_snake.body:
-            input_space[body_part.x][body_part.y][0] = 1
-        input_space[self_snake.head.x][self_snake.head.y][0] = 5
+            input_space[body_part.x + 1][body_part.y + 1][0] = 1
+        input_space[self_snake.head.x + 1][self_snake.head.y + 1][0] = 5
 
         # Heads are represented with 5, bodies with 1
         for snake in board.snakes:
             for body_part in snake.body:
-                input_space[body_part.x][body_part.y][1] = 1
-            input_space[snake.head.x][snake.head.y][1] = 5
+                input_space[body_part.x + 1][body_part.y + 1][1] = 1
+            input_space[snake.head.x + 1][snake.head.y + 1][1] = 5
 
         for food in board.food:
-            input_space[food.x][food.y][2] = 1 - self_snake.health / 100
+            input_space[food.x + 1][food.y + 1][2] = 1 - self_snake.health / 100
 
         return input_space
