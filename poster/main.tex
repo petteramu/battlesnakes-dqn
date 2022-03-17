@@ -23,7 +23,7 @@
 %----------------------------------------------------------------------------------------
 
 \documentclass[final]{beamer}
-
+\usepackage[utf8]{inputenc}
 \usepackage[scale=1.24]{beamerposter} % Use the beamerposter package for laying out the poster
 
 \usetheme{confposter} % Use the confposter theme supplied with this template
@@ -92,9 +92,9 @@
 %----------------------------------------------------------------------------------------
 
 \begin{alertblock}{Objectives}
-Make D nevral netweork for traing snakes
+Make Deep Q learing nevral network for traning snakes used for playing the game \href{https://play.battlesnake.com/}{Battlesnake}
 \begin{itemize}
-\item  Test to see if we can tran a snake learn
+\item Can we use Deep Q learning for traning snakes 
 \item something
 \item Nascetur ridiculus mus.  
 \item Euismod non erat. Nam ultricies pellentesque nunc, ultrices volutpat nisl ultrices a.
@@ -108,7 +108,7 @@ Make D nevral netweork for traing snakes
 
 \begin{block}{Introduction}
 
-Lorem ipsum dolor \textbf{sit amet}, consectetur adipiscing elit. Sed commodo molestie porta. Sed ultrices scelerisque sapien ac commodo. Donec ut volutpat elit. Sed laoreet accumsan mattis. Integer sapien tellus, auctor ac blandit eget, sollicitudin vitae lorem. Praesent dictum tempor pulvinar. Suspendisse potenti. Sed tincidunt varius ipsum, et porta nulla suscipit et. Etiam congue bibendum felis, ac dictum augue cursus a. \textbf{Donec} magna eros, iaculis sit amet placerat quis, laoreet id est. In ut orci purus, interdum ornare nibh. Pellentesque pulvinar, nibh ac malesuada accumsan, urna nunc convallis tortor, ac vehicula nulla tellus eget nulla. Nullam lectus tortor, \textit{consequat tempor hendrerit} quis, vestibulum in diam. Maecenas sed diam augue.
+Poster for describing the work done for student project in INF626. We wanted to see if we could use Deep Q Learing for training snakes for playing the game Battlesnake. Battlesnake is a game played on a squared board, for training we used 11x11 board. The goal of the game is to survive, for a snake to survive it must; eat, not crash into other snakes and not to crash into a wall - the last snake on the board is the winner. We descried to use Deep Q learning for as the method for training the snakes. 
 
 This statement requires citation \cite{Smith:2012qr}.
 
@@ -117,7 +117,7 @@ This statement requires citation \cite{Smith:2012qr}.
 %------------------------------------------------
 
 \begin{figure}
-\includegraphics[width=0.8\linewidth]{placeholder.jpg}
+\includegraphics[width=0.8\linewidth]{output.png}
 \caption{Figure caption}
 \end{figure}
 
@@ -139,7 +139,7 @@ This statement requires citation \cite{Smith:2012qr}.
 
 \begin{block}{Materials}
 
-The following materials were required to complete the research:
+The following materials were required to complete the research:jjhjk
 
 \begin{itemize}
 \item Curabitur pellentesque dignissim
@@ -169,9 +169,25 @@ The materials were prepared according to the steps outlined below:
 %	METHODS
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Methods}
+\begin{block}{Implementation/Method}
+			
+Trained three different snakes each having a reward function
 
-Lorem ipsum dolor \textbf{sit amet}, consectetur adipiscing elit. Sed laoreet accumsan mattis. Integer sapien tellus, auctor ac blandit eget, sollicitudin vitae lorem. Praesent dictum tempor pulvinar. Suspendisse potenti. Sed tincidunt varius ipsum, et porta nulla suscipit et. Etiam congue bibendum felis, ac dictum augue cursus a. \textbf{Donec} magna eros, iaculis sit amet placerat quis, laoreet id est. In ut orci purus, interdum ornare nibh. Pellentesque pulvinar, nibh ac malesuada accumsan, urna nunc convallis tortor, ac vehicula nulla tellus eget nulla. Nullam lectus tortor, \textit{consequat tempor hendrerit} quis, vestibulum in diam. Maecenas sed diam augue.
+\begin{enumerate}
+\item Snake only gets one point if is the only snake left meaning it won the game 					
+\item Snake is punished when loosing the game, and rewarded when winning
+\item Snake gets point if it survives
+\end{enumerate}
+
+Then we created three different models using Keras Sequential model with input
+ \begin{enumerate}
+\item Shape of the board(11x11) 					
+\item Activation function, here we used ReLU and LeakeyReLU
+\item One model with 2 layers and the two with three layers
+\end{enumerate}
+
+
+
 
 \end{block}
 
@@ -242,7 +258,8 @@ Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sol
 \caption{Figure caption}
 \end{figure}
 
-Nunc tempus venenatis facilisis. Curabitur suscipit consequat eros non porttitor. Sed a massa dolor, id ornare enim:
+
+Nunc tempus venenatis facilisis. ssCur  abitur suscipit consequat eros non porttitor. Sed a massa dolor, id ornare enim:
 
 \begin{table}
 \vspace{2ex}
