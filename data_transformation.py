@@ -14,7 +14,9 @@ class DataTransformer():
         input_space = []
         for width in range(0, board.width):
             # [self, other snakes, food]
-            input_space.append([[0, 0, 0]] * board.height)
+            input_space.append([])
+            for height in range(0, board.height):
+                input_space[width].append([0, 0, 0])
         
         for body_part in self_snake.body:
             input_space[body_part.x][body_part.y][0] = 1
@@ -37,7 +39,9 @@ class BorderedDataTransformer(DataTransformer):
         input_space = []
         for width in range(0, board.width + 2):
             # [self, other snakes, food]
-            input_space.append([[0, 0, 0]] * (board.height + 2))
+            input_space.append([])
+            for height in range(0, board.height + 2):
+                input_space[width].append([0, 0, 0])
         
         # Fill borders with -1
         for x in range(0, len(input_space)):
@@ -52,11 +56,13 @@ class BorderedDataTransformer(DataTransformer):
 
         # Heads are represented with 5, bodies with 1
         for snake in board.snakes:
+            if snake.id == self_snake.id:
+                continue
             for body_part in snake.body:
                 input_space[body_part.x + 1][body_part.y + 1][1] = 1
             input_space[snake.head.x + 1][snake.head.y + 1][1] = 5
 
         for food in board.food:
             input_space[food.x + 1][food.y + 1][2] = 1 - self_snake.health / 100
-
+        
         return input_space

@@ -53,12 +53,20 @@ class Trainer():
             bordered_value_model = load_model(f"./models/bordered.h5")
             bordered_target_model = load_model(f"./models/bordered.h5")
 
+        bordered_agent = DQN_agent("bordered", bordered_value_model, bordered_target_model, bordered_data_transformer, OnlyWinsRewarder(), epsilon)
+        survivor_agent = DQN_agent("survivor", survivor_value_model, survivor_target_model, data_transformer, SurvivalRewarder(), epsilon)
+        mk2_punisher_agent = DQN_agent("mk2_punisher", mk2_punisher_value_model, mk2_punisher_target_model, data_transformer, RewardWinsPunishLossRewarder(), epsilon)
+        mk2_winner_agent = DQN_agent("mk2_winner", mk2_winner_value_model, mk2_winner_target_model, data_transformer, OnlyWinsRewarder(), epsilon)
         self.agents = {
             # "winner": DQN_agent("winner", winner_value_model, winner_target_model, data_transformer, OnlyWinsRewarder(), winner_epsilon),
-            "bordered": DQN_agent("bordered", bordered_value_model, bordered_target_model, bordered_data_transformer, OnlyWinsRewarder(), epsilon),
-            "survivor": DQN_agent("survivor", survivor_value_model, survivor_target_model, data_transformer, SurvivalRewarder(), epsilon),
-            "mk2_punisher": DQN_agent("mk2_punisher", mk2_punisher_value_model, mk2_punisher_target_model, data_transformer, RewardWinsPunishLossRewarder(), epsilon),
-            "mk2_winner": DQN_agent("mk2_winner", mk2_winner_value_model, mk2_winner_target_model, data_transformer, OnlyWinsRewarder(), epsilon)
+            "bordered": bordered_agent,
+            "bordered2": bordered_agent,
+            "survivor": survivor_agent,
+            "survivor2": survivor_agent,
+            "mk2_punisher": mk2_punisher_agent,
+            "mk2_punisher2": mk2_punisher_agent,
+            "mk2_winner": mk2_winner_agent,
+            "mk2_winner2": mk2_winner_agent,
         }
         self.live_stats = dict()
         for agent in self.agents:
@@ -86,7 +94,7 @@ class Trainer():
         histories: Dict[str, List[RoundHistoryElement]] = dict()
         for snake in snakes:
             histories[snake.name] = snake.policy.history
-            self.logger.keep(snake.name, snake.policy.history)
+            self.logger.keep(snake.policy.agent.name, snake.policy.history)
         
         return histories
 
@@ -99,7 +107,7 @@ class Trainer():
     def save_history(self):
         """Saves the result of the games since last save to a log file"""
         for agent_name in self.agents:
-            self.logger.dump(agent_name)
+            self.logger.dump(self.agents[agent_name].name)
 
     def train(self, rounds: int = ROUNDS):
         """ This is the actual training logic. The training will go for x amount of rounds, where each round will run a battlesnake game.
@@ -135,7 +143,7 @@ class Trainer():
                         agent.value_network.weights)
 
                 if save_model:
-                    agent.value_network.save(f'models/{snake_name}.h5', save_format="h5")
+                    agent.value_network.save(f'models/{agent.name}.h5', save_format="h5")
                 
                 if save_logs:
                     self.save_history()
