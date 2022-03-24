@@ -32,3 +32,8 @@ packages/
 venv
 __pycache__
 models/shared_replay_memory
+poster/main.synctex.gz
+poster/main.fls
+poster/main.fdb_latexmk
+poster/main.blg
+poster/main.synctex.gz
