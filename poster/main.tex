@@ -92,12 +92,10 @@
 %----------------------------------------------------------------------------------------
 
 \begin{alertblock}{Objectives}
-Make Deep Q learing nevral network for traning snakes used for playing the game \href{https://play.battlesnake.com/}{Battlesnake}
+Make Deep Q learning neural network for training snakes used for playing the game \href{https://play.battlesnake.com/}{Battlesnake}
 \begin{itemize}
-\item Can we use Deep Q learning for traning snakes 
-\item something
-\item Nascetur ridiculus mus.  
-\item Euismod non erat. Nam ultricies pellentesque nunc, ultrices volutpat nisl ultrices a.
+\item Can we use Deep Q learning for training snakes to play the game
+\item Can we make the AI snakes perform better than traditionally programmed snakes
 \end{itemize}
 
 \end{alertblock}
@@ -108,7 +106,7 @@ Make Deep Q learing nevral network for traning snakes used for playing the game 
 
 \begin{block}{Introduction}
 
-Poster for describing the work done for student project in INF626. We wanted to see if we could use Deep Q Learing for training snakes for playing the game Battlesnake. Battlesnake is a game played on a squared board, for training we used 11x11 board. The goal of the game is to survive, for a snake to survive it must; eat, not crash into other snakes and not to crash into a wall - the last snake on the board is the winner. We descried to use Deep Q learning for as the method for training the snakes. 
+Poster for describing the work done for student project in INF626. We wanted to see if we could use Deep Q learning for training snakes for playing the game Battlesnake. Battlesnake is a game played on a squared board. For training we used an 11x11 board. The goal of the game is to survive. For a snake to survive it must; eat, not crash into other snakes and not crash into the wall - the last snake on the board is the winner. 
 
 \end{block}
 
@@ -116,7 +114,7 @@ Poster for describing the work done for student project in INF626. We wanted to 
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{battlesnake.png}
-\caption{Battlesnakes game	}
+\caption{Battlesnakes game: 4 snakes compete in surviving the longest.	}
 \end{figure}
 
 %----------------------------------------------------------------------------------------
@@ -132,15 +130,19 @@ Poster for describing the work done for student project in INF626. We wanted to 
 \begin{column}{\onecolwid}\vspace{-.6in} % The first column within column 2 (column 2.1)
 
 %----------------------------------------------------------------------------------------
-%	MATERIALS
+%	METHOD
 %----------------------------------------------------------------------------------------
+\begin{figure}
+\includegraphics[width=1\linewidth]{deepq.jpeg}
+\caption{Overview of deep Q network.}
+\end{figure}
 
-\begin{block}{Metod}
+\begin{block}{Method}
 
-Write something about Deep Q Network?
-
-
-
+Before each move the state of the game is fed to the agent as an 11x11 array, holding the coordinates of every snake head and body, as well as food. 
+Before the network is properly trained it should do some exploration, trying random moves, so for every move there is a $\epsilon$ probability of the agent doing something at random. $\epsilon$ decays over time at an exponential rate, converging towards 0. 
+For every action, there is a reward, and the neural network will adopt the weights that maximizes reward. The snakes have been given different reward functions for trying out different strategies. 
+The neural network is implemented with Keras/Tensorflow. 
 \end{block}
 
 %----------------------------------------------------------------------------------------
@@ -170,9 +172,6 @@ Then we created three different models using Keras Sequential model with input
 \item One model with 2 layers and two with three layers
 \end{enumerate}
 
-
-
-
 \end{block}
 
 %----------------------------------------------------------------------------------------
@@ -185,11 +184,11 @@ Then we created three different models using Keras Sequential model with input
 %	IMPORTANT RESULT
 %----------------------------------------------------------------------------------------
 
-\begin{alertblock}{Important Result}
+% \begin{alertblock}{Important Result}
 
-Lorem ipsum dolor \textbf{sit amet}, consectetur adipiscing elit. Sed commodo molestie porta. Sed ultrices scelerisque sapien ac commodo. Donec ut volutpat elit.
+% The snakes were able to play the game, but did not perform at a super-human level.
 
-\end{alertblock} 
+% \end{alertblock} 
 
 %----------------------------------------------------------------------------------------
 
@@ -198,66 +197,41 @@ Lorem ipsum dolor \textbf{sit amet}, consectetur adipiscing elit. Sed commodo mo
 \begin{column}{\onecolwid} % The first column within column 2 (column 2.1)
 
 %----------------------------------------------------------------------------------------
-%	MATHEMATICAL SECTION
-%----------------------------------------------------------------------------------------
-
-\begin{block}{Mathematical Section}
-
-Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin. Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin.
-  
-\begin{equation}
-E = mc^{2}
-\label{eqn:Einstein}
-\end{equation}
-
-Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin. Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin.
-
-\begin{equation}
-\cos^3 \theta =\frac{1}{4}\cos\theta+\frac{3}{4}\cos 3\theta
-\label{eq:refname}
-\end{equation}
-
-Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin. Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin.
-
-\begin{equation}
-\kappa =\frac{\xi}{E_{\mathrm{max}}} %\mathbb{ZNR}
-\end{equation}
-
-\end{block}
-
-%----------------------------------------------------------------------------------------
-
-\end{column} % End of column 2.1
-
-\begin{column}{\onecolwid} % The second column within column 2 (column 2.2)
-
-%----------------------------------------------------------------------------------------
 %	RESULTS
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Results}
 
 \begin{figure}
-\includegraphics[width=0.8\linewidth]{logo.jpeg		}
-\caption{Figure caption}
+\includegraphics[width=0.8\linewidth]{average_survival.PNG}
+\caption{Average survival measured in number of turns.}
 \end{figure}
 
 
-Nunc tempus venenatis facilisis. ssCur  abitur suscipit consequat eros non porttitor. Sed a massa dolor, id ornare enim:
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{win_chance.PNG}
+\caption{Probability of winning for each snake, as the training progressed.}
+\end{figure}
 
-\begin{table}
-\vspace{2ex}
-\begin{tabular}{l l l}
-\toprule
-\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
-\midrule
-Treatment 1 & 0.0003262 & 0.562 \\
-Treatment 2 & 0.0015681 & 0.910 \\
-Treatment 3 & 0.0009271 & 0.296 \\
-\bottomrule
-\end{tabular}
-\caption{Table caption}
-\end{table}
+All the snakes performed better over time, but the snake named 'survivor' outperformed the others significantly. 
+Additional training after the first 10000 games did not appear to increase performance. 
+\end{block}
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of column 2.1
+
+\begin{column}{\onecolwid} % The second column within column 2 (column 2.2)
+%----------------------------------------------------------------------------------------
+%	DISCUSSION
+%----------------------------------------------------------------------------------------
+
+\begin{block}{Discussion}
+
+Some bugs were discovered in the game code that prevented the snakes from learning. 
+These issues were hard to troubleshoot and were discovered mostly by coincidence. 
+There might be other such bugs lurking, preventing the snakes from performing at a superhuman level. 
+It is also possible that the top snake is being held back by the other low performing snakes, as the game ends when there is just one snake left on the board. 
+If we had replaced all the snakes with four identical 'survivor' snakes, we would likely have seen longer lasting games. 
 
 \end{block}
 
@@ -279,7 +253,8 @@ Treatment 3 & 0.0009271 & 0.296 \\
 
 \begin{block}{Conclusion}
 
-Nunc tempus venenatis facilisis. \textbf{Curabitur suscipit} consequat eros non porttitor. Sed a massa dolor, id ornare enim. Fusce quis massa dictum tortor \textbf{tincidunt mattis}. Donec quam est, lobortis quis pretium at, laoreet scelerisque lacus. Nam quis odio enim, in molestie libero. Vivamus cursus mi at \textit{nulla elementum sollicitudin}.
+We set out to use reinforcement learning to train battlesnakes. 
+The snakes did not perform at the expected level, but were much better than random chance. 
 
 \end{block}
 
@@ -289,38 +264,10 @@ Nunc tempus venenatis facilisis. \textbf{Curabitur suscipit} consequat eros non 
 
 \begin{block}{Additional Information}
 
-Maecenas ultricies feugiat velit non mattis. Fusce tempus arcu id ligula varius dictum. 
-\begin{itemize}
-\item Curabitur pellentesque dignissim
-\item Eu facilisis est tempus quis
-\item Duis porta consequat lorem
-\end{itemize}
+Source code can be found on github: \href{https://github.com/petteramu/battlesnakes-dqn}{https://github.com/petteramu/battlesnakes-dqn}
 
 \end{block}
 
-%----------------------------------------------------------------------------------------
-%	REFERENCES
-%----------------------------------------------------------------------------------------
-
-\begin{block}{References}
-
-\nocite{*} % Insert publications even if they are not cited in the poster
-\small{\bibliographystyle{unsrt}
-\bibliography{sample}\vspace{0.75in}}
-
-\end{block}
-
-%----------------------------------------------------------------------------------------
-%	ACKNOWLEDGEMENTS
-%----------------------------------------------------------------------------------------
-
-\setbeamercolor{block title}{fg=red,bg=white} % Change the block title color
-
-\begin{block}{Acknowledgements}
-
-\small{\rmfamily{Nam mollis tristique neque eu luctus. Suspendisse rutrum congue nisi sed convallis. Aenean id neque dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.}} \\
-
-\end{block}
 
 %----------------------------------------------------------------------------------------
 %	CONTACT INFORMATION
@@ -332,18 +279,12 @@ Maecenas ultricies feugiat velit non mattis. Fusce tempus arcu id ligula varius 
 \begin{alertblock}{Contact Information}
 
 \begin{itemize}
-\item Web: \href{https://github.com/petteramu/battlesnakes-dqn}{https://github.com/petteramu/battlesnakes-dqn}
-\item Email: \href{mailto:john@smith.com}{john@smith.com}
-\item Phone: +1 (000) 111 1111
+\item Petter Amundsen, petter.amundsen@bouvet.no
+\item Håkon Sagehaug, hakon.sagehaug@bouvet.no
+\item Tommy Bergsvåg, tommy.bergsvag@bouvet.no
 \end{itemize}
 
 \end{alertblock}
-
-\begin{center}
-\begin{tabular}{ccc}
-\includegraphics[width=0.4\linewidth]{logo.jpeg} & \hfill & \includegraphics[width=0.4\linewidth]{logo.jpeg}
-\end{tabular}
-\end{center}
 
 %----------------------------------------------------------------------------------------
 
